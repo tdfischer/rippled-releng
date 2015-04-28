@@ -1,0 +1,5 @@
+rippled (0.28.0-1) trusty; urgency=low
+
+  * Initial release.
+
+ -- Torrie Fischer <torrie@ripple.com>  Thu, 16 Apr 2015 00:28:06 +0000

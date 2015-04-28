@@ -1,0 +1,14 @@
+Source: rippled
+Section: net
+Priority: optional
+Maintainer: Torrie Fischer <torrie@ripple.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.4
+Homepage: https://ripple.com/
+Vcs-Git: git://github.com/ripple/rippled.git
+Vcs-Browser: http://github.com/ripple/rippled
+
+Package: rippled
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Ripple P2P server
