@@ -12,5 +12,3 @@ Package: rippled
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: Ripple P2P server
-Replaces: rippled (= 1426204787:0.27.3-1)
-Conflicts: rippled (= 1426204787:0.27.3-1)
