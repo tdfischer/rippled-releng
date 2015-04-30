@@ -1,4 +1,4 @@
-rippled (0.28.0-1ubuntu1) trusty; urgency=medium
+rippled (0.28.0-2) trusty; urgency=medium
 
   [ Torrie Fischer ]
   * Add makefile patch
