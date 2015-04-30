@@ -1,11 +1,9 @@
-rippled (0.28.0-1ubuntu1~1.gbp5218ac) UNRELEASED; urgency=medium
-
-  ** SNAPSHOT build @5218ac60fa8e2abf48d5553c23e5a977da1d52b5 **
+rippled (0.28.0-1ubuntu1) trusty; urgency=medium
 
   [ Torrie Fischer ]
   * Add makefile patch
 
- -- Torrie Fischer <torrie@ripple.com>  Thu, 30 Apr 2015 16:21:54 +0000
+ -- Torrie Fischer <torrie@ripple.com>  Thu, 30 Apr 2015 21:11:17 +0000
 
 rippled (0.28.0-1) trusty; urgency=low
 
