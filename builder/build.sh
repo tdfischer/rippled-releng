@@ -1,6 +1,24 @@
-mkdir -p /root/build/
-cd /root/build/
-git clone git://github.com/tdfischer/rippled
-cd rippled
+if [ ! -d /root/build/rippled ];then
+  mkdir -p /root/build/
+
+  if [ -d /root/src/rippled ]; then
+    git clone /root/src/rippled /root/build/rippled
+  else
+    git clone git://github.com/tdfischer/rippled /root/build/rippled
+  fi
+
+fi
+
+cd /root/build/rippled
 git checkout -f $GIT_BRANCH
-gbp buildpackage --git-ignore-new --git-debian-branch=ubuntu/trusty --git-tag --git-debian-tag='ubuntu/%(version)s'
+
+if [ ! -d /root/build/rippled/build/deb ];then
+  mkdir -p /root/build/rippled/build/deb
+fi
+
+git config --global user.name $GIT_NAME
+git config --global user.email $GIT_EMAIL
+
+./debian/build.sh
+
+git push --tags

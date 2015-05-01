@@ -13,6 +13,8 @@ RUN sudo apt-get update && \
     update-alternatives --set gcc /usr/bin/gcc-4.8
 
 ENV GIT_BRANCH=debian
+ENV GIT_NAME="Ripple Labs Release Engineering"
+ENV GIT_EMAIL="releng@ripple.com"
 
 ADD ./build.sh /usr/bin/build-rippled
 VOLUME /root/build/build-area/
