@@ -1,0 +1,47 @@
+#!/bin/bash
+
+pidfile=/var/run/rippled.pid
+bin=/usr/sbin/rippled
+
+if [[ -e $bin ]]; then
+	running=0
+
+	if [[ -e $pidfile ]]; then
+		pid=$(<$pidfile)
+		ps $pid >/dev/null
+		ret=$?
+		if [[ $ret -ne 0 ]]; then
+			rm -f $pidfile
+			running=0
+		else
+			running=1
+		fi
+	fi
+
+	# call me paranoid, I don't trust pidfiles
+	pgrep -f 'rippled' >/dev/null
+	ret=$?
+	if [[ $ret -eq 0 ]]; then
+		running=1
+	fi
+
+	if [[ ${running:-0} -eq 1 ]]; then
+		if [[ -e ${bin}.dpkg-old ]]; then
+			echo "You have a pending upgrade from a previous installation, cannot proceed until you restart rippled or delete ${bin}.dpkg-old manually"
+			exit 2
+		else
+			echo "NOTICE: Rippled is currently running, so moving old binary aside. This will preserve the open filehandle. You should restart rippled as soon as feasible to pick up the new binary."
+			# [[ -e ${bin}.dpkg-old ]] && rm -f ${bin}.dpkg-old
+			mv $bin ${bin}.dpkg-old
+		fi
+	fi
+fi
+
+getent passwd rippled >/dev/null
+ret=$?
+
+if [[ $ret -ne 0 ]]; then
+        echo Creating rippled user...
+        [[ -d /var/lib/rippled ]] || mkdir -p /var/lib/rippled
+        useradd -U -r -d /var/lib/rippled -s /usr/sbin/nologin rippled
+fi

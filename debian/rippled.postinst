@@ -6,3 +6,6 @@ if [ -x "/etc/init.d/rippled" ] || [ -e "/etc/init/rippled.conf" ]; then
 	invoke-rc.d rippled start || exit $?
 fi
 # End automatically added section
+
+mkdir -p /var/lib/rippled
+chown -R rippled:rippled /var/lib/rippled
