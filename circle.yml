@@ -1,0 +1,8 @@
+machine:
+  services:
+    - docker
+test:
+  override:
+    - docker build -t tdfischer/rippled-deb-packager builder/
+    - docker build -t tester debtest/
+    - ./builder/build-in-docker.sh
