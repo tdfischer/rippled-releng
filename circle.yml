@@ -1,6 +1,10 @@
 machine:
   services:
     - docker
+dependencies:
+  pre:
+    - git clone git@github.com:codius/skynet-keys
+    - gpg --import skynet-keys/releng.gpg
 test:
   override:
     - docker build -t tdfischer/rippled-deb-packager builder/
