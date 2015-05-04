@@ -1,4 +1,4 @@
-if [ ! -d /root/build/rippled ];then
+if [ ! -f /root/build/rippled/SConstruct ];then
   mkdir -p /root/build/
 
   if [ -d /root/src/rippled ]; then
@@ -22,3 +22,5 @@ git config --global user.email $GIT_EMAIL
 ./debian/build.sh
 
 git push --tags
+mkdir -p /root/src/rippled/build/deb/
+rsync -avzP build/deb/*.{deb,changes,dsc,tar.gz} /root/src/rippled/build/deb/

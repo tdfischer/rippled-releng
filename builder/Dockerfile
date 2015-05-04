@@ -16,7 +16,7 @@ ENV GIT_BRANCH=debian
 ENV GIT_NAME="Ripple Labs Release Engineering"
 ENV GIT_EMAIL="releng@ripple.com"
 
-ADD ./build.sh /usr/bin/build-rippled
+ADD ./build-rippled.sh /usr/bin/build-rippled
 VOLUME /root/build/build-area/
 
 ENTRYPOINT /usr/bin/build-rippled
