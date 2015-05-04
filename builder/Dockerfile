@@ -12,7 +12,6 @@ RUN sudo apt-get update && \
         --slave /usr/bin/g++ g++ /usr/bin/g++-4.8 && \
     update-alternatives --set gcc /usr/bin/gcc-4.8
 
-ENV GIT_BRANCH=debian
 ENV GIT_NAME="Ripple Labs Release Engineering"
 ENV GIT_EMAIL="releng@ripple.com"
 
