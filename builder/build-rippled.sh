@@ -14,6 +14,7 @@ if [ -z "$DEBSIGN_KEYID" ]; then
   export DEBSIGN_KEYID="494EC596"
 fi
 
+echo "[builder] Building as $GIT_NAME <$GIT_EMAIL>"
 git config --global user.name "$GIT_NAME"
 git config --global user.email "$GIT_EMAIL"
 
