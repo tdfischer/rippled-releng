@@ -3,6 +3,8 @@ machine:
     - docker
 dependencies:
   pre:
+    - git config --global user.email "releng@ripple.com"
+    - git config --global user.name "Ripple Labs Release Engineering (circleci builder)"
     - git clone git@github.com:codius/skynet-keys
     - gpg --import skynet-keys/releng.gpg
 test:
