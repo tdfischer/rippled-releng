@@ -46,9 +46,7 @@ if [ ! -d /root/build/rippled/build/deb ];then
 fi
 
 echo "[builder] Generating updated changelog"
-gbp dch --snapshot --debian-branch=debian -N $DEB_VERSION
-git add debian/changelog
-git commit -m 'debian: Automatic changelog update'
+gbp dch --multimaint-merge --git-author --commit --snapshot --debian-branch=debian -N $DEB_VERSION
 echo "[builder] Building package"
 gbp buildpackage --git-verbose --git-ignore-new --git-tag --git-upstream-tag=$VERSION
 
