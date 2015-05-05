@@ -35,7 +35,6 @@ fi
 cd /root/build/rippled
 VERSION=$(git describe --abbrev=0 --tags $GIT_UPSTREAM)
 DEB_VERSION=$(echo $VERSION | sed -e s/-/~/g)
-DEB_VERSION=$VERSION
 echo "[builder] Starting build of $VERSION"
 echo "[builder] Merging $GIT_UPSTREAM into $GIT_BRANCH"
 git checkout -f $GIT_BRANCH
@@ -46,11 +45,13 @@ if [ ! -d /root/build/rippled/build/deb ];then
 fi
 
 echo "[builder] Generating updated changelog"
-gbp dch --multimaint-merge --git-author --commit --snapshot --debian-branch=debian -N $DEB_VERSION
-echo "[builder] Building package"
-gbp buildpackage --git-verbose --git-ignore-new --git-tag --git-upstream-tag=$VERSION
+gbp dch --multimaint-merge --git-author --commit --debian-branch=debian -N $DEB_VERSION --since=$VERSION
+echo "[builder] Building package $DEB_VERSION"
+git archive HEAD --prefix=rippled-$VERSION/ | xz > ../rippled_$DEB_VERSION.orig.tar.xz
+dpkg-buildpackage
+git tag -s ubuntu/$VERSION -m '$DEB_VERSION built from $VERSION'
 
 echo "[builder] Build complete. Pushing new tags and copying package output"
 git push --tags
 mkdir -p /root/src/rippled/build/deb/
-rsync -avzP build/deb/*.{deb,changes,dsc,tar.gz} /root/src/rippled/build/deb/
+rsync -avzP ../*.{deb,changes,dsc,tar.gz,tar.xz} /root/src/rippled/build/deb/
