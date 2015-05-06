@@ -1,0 +1,4 @@
+src/beast/site_scons/site_tools/VSProject.pyc
+src/beast/site_scons/site_tools/Protoc.pyc
+src/beast/site_scons/Beast.pyc
+.sconsign.dblite
