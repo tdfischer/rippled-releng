@@ -1,5 +1,4 @@
 set -e
-sudo add-apt-repository -y ppa:afrank/boost
 sudo add-apt-repository -y "deb [arch=amd64] http://mirrors.ripple.com/ubuntu trusty contrib stable $APT_COMPONENT"
 sudo apt-get update -qq
 if [ -n "$RIPPLED_VERSION" ]; then
