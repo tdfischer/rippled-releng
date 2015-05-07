@@ -20,7 +20,6 @@ DAEMON=/usr/bin/rippled
 DAEMON_OPTS="--conf /etc/rippled/rippled.cfg"
 NET_OPTS="--net $DAEMON_OPTS"
 LOGDIR="/var/log/rippled"
-TMPDIR="/data/rippled/ephemeral"
 STOP_LOOPS=30
 
 ulimit -c unlimited
@@ -103,14 +102,6 @@ start() {
 	fi
 	echo "Starting daemon: "$NAME
 
-        # Clean out the ephemeral datastore if it exists.
-        if [ -d $TMPDIR ]; then
-            echo "Clearing out $TMPDIR"
-	    rm -f $TMPDIR/*
-        else
-            echo "$TMPDIR not found, so not clearing"
-        fi
-
         # If a new version of rippled has been installed from a .deb package,
         # back up the older version in case it's needed later.
 	if [[ -e ${DAEMON}.dpkg-old ]]; then
@@ -120,6 +111,7 @@ start() {
 	fi
 
         # Actually start rippled.
+  mkdir -p $LOGDIR
 	start-stop-daemon --start --quiet --background -m --pidfile $PIDFILE \
             --exec $DAEMON --chuid $USER --group $GROUP -- $NET_OPTS \
             &>$LOGDIR/rippled.log
