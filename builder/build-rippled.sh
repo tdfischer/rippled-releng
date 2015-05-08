@@ -37,25 +37,15 @@ DEB_VERSION=$(echo $VERSION | sed -e s/-/~/g)
 echo "[builder] Latest upstream tag in $GIT_UPSTREAM is $VERSION"
 echo "[builder] Deb package will be $DEB_VERSION"
 
+echo "[builder] Merging into debian"
+git checkout debian
+git merge -X theirs $GIT_UPSTREAM
+
+echo "[builder] Generating changelog"
+gbp dch -R --commit --auto --upstream-tag=$VERSION
+
 echo "[builder] Generating rippled_$DEB_VERSION.orig.tar.xz"
 git archive $GIT_UPSTREAM --prefix=rippled-$DEB_VERSION/ | xz > ../rippled_$DEB_VERSION.orig.tar.xz
-
-echo "[builder] Merging debian/"
-BUILD_BRANCH=build-$(date +%F)
-git branch $BUILD_BRANCH $GIT_UPSTREAM
-git checkout $BUILD_BRANCH
-cp -rp /root/src/rippled-releng/debian .
-
-echo "[builder] Generating updated changelog"
-echo "rippled ($DEB_VERSION) trusty; urgency=medium" >> /tmp/newlog
-echo >> /tmp/newlog
-echo " [ $GIT_NAME ]" >> /tmp/newlog
-echo " * Automatic build of $GIT_UPSTREAM" >> /tmp/newlog
-echo >> /tmp/newlog
-echo " -- $GIT_NAME <$GIT_EMAIL>  $(date -u +'%a, %d %b %Y %T +0000')" >> /tmp/newlog
-echo >> /tmp/newlog
-cat /tmp/newlog debian/changelog > debian/changelog.new
-mv debian/changelog.new debian/changelog
 
 echo "[builder] Building package rippled-$DEB_VERSION"
 dpkg-buildpackage
