@@ -97,6 +97,13 @@ echo "[builder] Building package rippled-$DEB_VERSION"
 dpkg-buildpackage -j`nproc`
 #git tag -s ubuntu/$VERSION -m '$DEB_VERSION built from $VERSION'
 
+echo "[builder] Testing installation"
+dpkg -i ../*.deb
+/etc/init.d/rippled start
+sleep 5;
+/etc/init.d/rippled status
+/etc/init.d/rippled stop
+
 echo "[builder] Build complete. Pushing new tags and copying package output"
 mkdir -p /root/src/rippled/build/deb/
 dcmd cp ../*.changes /root/src/rippled/build/deb/
