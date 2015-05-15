@@ -15,6 +15,6 @@ RUN sudo apt-get update && \
 
 ENV GIT_NAME="Ripple Labs Release Engineering"
 ENV GIT_EMAIL="releng@ripple.com"
-ENTRYPOINT /usr/bin/build-rippled
+ENTRYPOINT ["bash", "/usr/bin/build-rippled"]
 
 ADD ./build-rippled.sh /usr/bin/build-rippled

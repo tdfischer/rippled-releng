@@ -1,44 +1,56 @@
-#!/usr/bin/env sh
-
-SRC=""
+#!/usr/bin/env bash
+set -x
+GIT_URI=""
 REVISION="develop"
+SHELL=""
+ARGS=""
 
 while [[ $# > 0 ]]
 do
   key="$1"
   case $key in
     -s|--src)
-      SRC="$2"
+      GIT_URI="$2"
       shift
       ;;
-    -r|--revision)
-      REVISION="$2"
-      shift
-      ;;
-    --help)
-      echo "Usage: $0 --src git://foo --revision treeish"
-      exit 0
+    --shell)
+      SHELL="1"
       ;;
     *)
-      echo "Unknown option: $1"
-      exit 1
+      ARGS="$ARGS $1"
       ;;
   esac
   shift
 done
 
-if [ -n "$SRC" ];then
-  RIPPLED_SRC_ARG="-v $(realpath $SRC):/root/src/rippled"
+if [ -d "$GIT_URI" ];then
+  RIPPLED_SRC_ARG="-v $(realpath $GIT_URI):/root/src/rippled"
+  RIPPLED_SRC_REPO="--src /root/src/rippled"
+  echo "Mounting $(realpath $GIT_URI) on /root/src/rippled"
 fi
 
 GIT_EMAIL=$(git config --get user.email)
 GIT_NAME=$(git config --get user.name)
 
-docker run -t -i \
-  -e GIT_EMAIL="$GIT_EMAIL" \
-  -e GIT_NAME="$GIT_NAME" \
-  -e GIT_UPSTREAM="$REVISION" \
-  -v `pwd`:/root/src/rippled-releng \
-  -v ~/.gnupg:/root/.gnupg \
-  $RIPPLED_SRC_ARG \
-    tdfischer/rippled-deb-packager
+if [ -n "$SHELL" ];then
+  docker run -t -i \
+    -e GIT_EMAIL="$GIT_EMAIL" \
+    -e GIT_NAME="$GIT_NAME" \
+    --rm=true \
+    -v `pwd`:/root/src/rippled-releng \
+    -v ~/.gnupg:/root/.gnupg \
+    $RIPPLED_SRC_ARG \
+    --entrypoint /bin/bash \
+      tdfischer/rippled-deb-packager
+else
+  docker run -t -i \
+    -e GIT_EMAIL="$GIT_EMAIL" \
+    -e GIT_NAME="$GIT_NAME" \
+    --rm=true \
+    -v `pwd`:/root/src/rippled-releng \
+    -v ~/.gnupg:/root/.gnupg \
+    $RIPPLED_SRC_ARG \
+      tdfischer/rippled-deb-packager \
+      $RIPPLED_SRC_REPO \
+      $ARGS
+fi
