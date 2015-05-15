@@ -6,6 +6,7 @@ if [ -n "$RIPPLED_VERSION" ]; then
 else
   sudo apt-get -y install rippled
 fi
-rippled --net --conf /etc/rippled/rippled.cfg &
+/etc/init.d/rippled start
 sleep 30
-pkill rippled
+/etc/init.d/rippled status
+/etc/init.d/rippled stop
