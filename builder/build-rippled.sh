@@ -5,17 +5,46 @@ echo "[builder] Building as $GIT_NAME <$GIT_EMAIL>"
 git config --global user.name "$GIT_NAME"
 git config --global user.email "$GIT_EMAIL"
 
-if [ -z "$GIT_UPSTREAM" ];then
-  GIT_UPSTREAM="origin/develop"
+# Default ripple labs releng key
+DEBSIGN_KEYID="494EC596"
+
+while [[ $# > 0 ]]
+do
+  key="$1"
+  case $key in
+    -s|--src)
+      SRC="$2"
+      shift
+      ;;
+    -r|--revision)
+      REVISION="$2"
+      shift
+      ;;
+    -k|--debsign-keyid)
+      DEBSIGN_KEYID="$2"
+      shift
+      ;;
+    --help)
+      echo "Usage: $0 --src git://foo --revision treeish"
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      exit 1
+      ;;
+  esac
+  shift
+done
+
+if [ -z "$SRC" ]; then
+  echo "Missing --src argument"
+  exit 1
 fi
 
-if [ -z "$DEBSIGN_KEYID" ]; then
-  # Default ripple labs releng key
-  export DEBSIGN_KEYID="494EC596"
+if [ -z "$REVISION" ]; then
+  echo "Missing --revision argument"
+  exit 1
 fi
-
-echo "[builder] Packages will be signed with $DEBSIGN_KEYID:"
-gpg --list-keys $DEBSIGN_KEYID
 
 
 if [ ! -f /root/build/rippled/SConstruct ];then
@@ -27,9 +56,10 @@ if [ ! -f /root/build/rippled/SConstruct ];then
     GIT_REPO="git://github.com/ripple/rippled"
   fi
 
-  echo "[builder] Cloning rippled"
-  git clone $GIT_REPO /root/build/rippled
-fi
+echo "[builder] Cloning rippled"
+rm -rf /root/build/
+mkdir -p /root/build/
+git clone $SRC /root/build/rippled
 
 cd /root/build/rippled
 VERSION=$(git describe --abbrev=0 --tags $GIT_UPSTREAM)
