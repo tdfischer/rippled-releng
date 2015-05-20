@@ -1,9 +1,7 @@
 #/usr/bin/bash
 set -e
 
-echo "[builder] Building as $GIT_NAME <$GIT_EMAIL>"
-git config --global user.name "$GIT_NAME"
-git config --global user.email "$GIT_EMAIL"
+echo "Running with $@"
 
 # Default ripple labs releng key
 DEBSIGN_KEYID="494EC596"
@@ -63,39 +61,35 @@ mkdir -p /root/build/
 git clone $SRC /root/build/rippled
 
 cd /root/build/rippled
-echo "[builder] Merging into debian"
+echo "[builder] Building from $REVISION"
 git checkout debian
-git merge -X theirs $REVISION -m "Merge $REVISION for deb build"
-
+git merge -X theirs --no-edit $REVISION
 VERSION=$(git describe --tags $REVISION)
+TAGGED_VERSION=$(git describe --tags --abbrev=0 $REVISION)
 DEB_VERSION=$(echo $VERSION | sed -e s/-/~/g)
 GIT_TAG=$(echo $DEB_VERSION | sed -e s/~/_/g)
 OLD_VER=$(dpkg-parsechangelog --show-field Version)
-echo "[builder] Latest upstream tag in $REVISION is $VERSION"
-echo "[builder] Deb package will be $DEB_VERSION"
-echo "[builder] Generating changelog for $OLD_VER -> $DEB_VERSION"
+echo "[builder] Latest upstream tag in $REVISION is $TAGGED_VERSION"
+echo "[builder] Deb package will be $DEB_VERSION ($VERSION)"
+echo "[builder] Generating changelog for $TAGGED_VERSION -> $DEB_VERSION"
 
-gbp dch -N $DEB_VERSION
-
-#if dpkg --compare-versions "$DEB_VERSION" gt "$OLD_VER";then
-#  echo "[builder] Generating changelog for $OLD_VER -> $DEB_VERSION"
-#  dch -U -v $DEB_VERSION "Automatic build of new upstream version"
-#else
-#  echo "[builder] Generating changelog for $OLD_VER bump"
-#  dch -U -i "Automatic build"
-#fi
-
-dch -r "Automatic release"
-
+gbp dch -N $DEB_VERSION -S debian/
+dch -r 'New build'
 git add debian/changelog
-git commit -m 'Version bump to $DEB_VERSION'
+NEW_VER=$(dpkg-parsechangelog --show-field Version)
+git commit -m "Update changelog for $NEW_VER"
 
-echo "[builder] Generating rippled_$DEB_VERSION.orig.tar.xz"
-git archive $REVISION --prefix=rippled-$DEB_VERSION/ | xz > ../rippled_$DEB_VERSION.orig.tar.xz
+mkdir -p /root/build/rippled/build/deb
+
+echo "[builder] Generating rippled_$NEW_VER.orig.tar.xz"
+git archive $REVISION --prefix=rippled-$NEW_VER/ | xz > ../rippled_$NEW_VER.orig.tar.xz
 
 echo "[builder] Building package rippled-$DEB_VERSION"
-dpkg-buildpackage -j`nproc`
-#git tag -s ubuntu/$VERSION -m '$DEB_VERSION built from $VERSION'
+dpkg-buildpackage -j`nproc` || (
+  echo "[builder] Build failed. Dumping to a shell."
+  exec bash
+)
+gbp buildpackage --git-tag-only --git-ignore-new
 
 echo "[builder] Testing installation"
 dpkg -i ../*.deb
@@ -107,4 +101,4 @@ sleep 5;
 echo "[builder] Build complete. Pushing new tags and copying package output"
 mkdir -p /root/src/rippled/build/deb/
 dcmd cp ../*.changes /root/src/rippled/build/deb/
-#git push --tags
+git push --tags
