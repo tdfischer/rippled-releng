@@ -11,6 +11,9 @@
 # 1.0.0 soversion = 10
 %define soversion 10
 
+%define _prefix /opt/ripple/openssl/
+%define _libdir /opt/ripple/openssl/lib
+
 # Number of threads to spawn when testing some threading fixes.
 %define thread_test_threads %{?threads:%{threads}}%{!?threads:1}
 
@@ -21,7 +24,7 @@
 %global _performance_build 1
 
 Summary: Utilities from the general purpose cryptography library with TLS implementation
-Name: openssl
+Name: rippled-openssl
 Version: 1.0.1e
 Release: 42%{?dist}.5
 Epoch: 1
@@ -197,7 +200,7 @@ package provides Perl scripts for converting certificates and keys
 from other formats to the formats used by the OpenSSL toolkit.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n openssl-%{version}
 
 # The hobble_openssl is called here redundantly, just to be sure.
 # The tarball has already the sources removed.
@@ -414,6 +417,7 @@ make -C test apps tests
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_includedir},%{_libdir},%{_mandir},%{_libdir}/openssl}
 make INSTALL_PREFIX=$RPM_BUILD_ROOT install
 make INSTALL_PREFIX=$RPM_BUILD_ROOT install_docs
+mkdir -p $RPM_BUILD_ROOT%{_libdir}/openssl
 mv $RPM_BUILD_ROOT%{_libdir}/engines $RPM_BUILD_ROOT%{_libdir}/openssl
 mv $RPM_BUILD_ROOT%{_sysconfdir}/pki/tls/man/* $RPM_BUILD_ROOT%{_mandir}/
 rmdir $RPM_BUILD_ROOT%{_sysconfdir}/pki/tls/man
