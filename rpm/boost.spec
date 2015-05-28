@@ -2,6 +2,10 @@
 # As the %%doc macro erases the target directory, namely
 # $RPM_BUILD_ROOT%%{_docdir}/%%{name}-%%{version}, manually installed
 # documentation must be saved into a temporary dedicated directory.
+
+%define _prefix /opt/ripple/boost/
+%define _libdir /opt/ripple/boost/lib
+
 %define boost_docdir __tmp_docdir
 %define boost_examplesdir __tmp_examplesdir
 
@@ -30,17 +34,17 @@
 
 %bcond_with python3
 
-Name: boost
+Name: ripple-boost
 Summary: The free peer-reviewed portable C++ source libraries
 Version: 1.57.0
 %define version_enc 1_57_0
 Release: 23%{?dist}
 License: Boost and MIT and Python
 
-%define toplev_dirname %{name}_%{version_enc}
+%define toplev_dirname boost_%{version_enc}
 URL: http://www.boost.org
 Group: System Environment/Libraries
-Source0: http://downloads.sourceforge.net/%{name}/%{toplev_dirname}.tar.bz2
+Source0: http://downloads.sourceforge.net/boost/%{toplev_dirname}.tar.bz2
 Source1: ver.py
 Source2: libboost_thread-mt.so
 
@@ -52,28 +56,28 @@ Source2: libboost_thread-mt.so
 # components, except for MPI and Python 3 sub-packages.  Those are
 # special in that they are rarely necessary, and it's not a big burden
 # to have interested parties install them explicitly.
-Requires: boost-atomic = %{version}-%{release}
-Requires: boost-chrono = %{version}-%{release}
+Requires: ripple-boost-atomic = %{version}-%{release}
+Requires: ripple-boost-chrono = %{version}-%{release}
 %if %{with context}
-Requires: boost-context = %{version}-%{release}
+Requires: ripple-boost-context = %{version}-%{release}
 %endif
-Requires: boost-date-time = %{version}-%{release}
-Requires: boost-filesystem = %{version}-%{release}
-Requires: boost-graph = %{version}-%{release}
-Requires: boost-iostreams = %{version}-%{release}
-Requires: boost-locale = %{version}-%{release}
-Requires: boost-math = %{version}-%{release}
-Requires: boost-program-options = %{version}-%{release}
-Requires: boost-python = %{version}-%{release}
-Requires: boost-random = %{version}-%{release}
-Requires: boost-regex = %{version}-%{release}
-Requires: boost-serialization = %{version}-%{release}
-Requires: boost-signals = %{version}-%{release}
-Requires: boost-system = %{version}-%{release}
-Requires: boost-test = %{version}-%{release}
-Requires: boost-thread = %{version}-%{release}
-Requires: boost-timer = %{version}-%{release}
-Requires: boost-wave = %{version}-%{release}
+Requires: ripple-boost-date-time = %{version}-%{release}
+Requires: ripple-boost-filesystem = %{version}-%{release}
+Requires: ripple-boost-graph = %{version}-%{release}
+Requires: ripple-boost-iostreams = %{version}-%{release}
+Requires: ripple-boost-locale = %{version}-%{release}
+Requires: ripple-boost-math = %{version}-%{release}
+Requires: ripple-boost-program-options = %{version}-%{release}
+Requires: ripple-boost-python = %{version}-%{release}
+Requires: ripple-boost-random = %{version}-%{release}
+Requires: ripple-boost-regex = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
+Requires: ripple-boost-signals = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
+Requires: ripple-boost-test = %{version}-%{release}
+Requires: ripple-boost-thread = %{version}-%{release}
+Requires: ripple-boost-timer = %{version}-%{release}
+Requires: ripple-boost-wave = %{version}-%{release}
 
 BuildRequires: libstdc++-devel%{?_isa}
 BuildRequires: bzip2-devel%{?_isa}
@@ -239,7 +243,7 @@ variables.
 %package chrono
 Summary: Run-Time component of boost chrono library
 Group: System Environment/Libraries
-Requires: boost-system = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
 
 %description chrono
 
@@ -289,7 +293,7 @@ on generic programming concepts.
 %package filesystem
 Summary: Run-Time component of boost filesystem library
 Group: System Environment/Libraries
-Requires: boost-system = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
 
 %description filesystem
 
@@ -300,7 +304,7 @@ directories.
 %package graph
 Summary: Run-Time component of boost graph library
 Group: System Environment/Libraries
-Requires: boost-regex = %{version}-%{release}
+Requires: ripple-boost-regex = %{version}-%{release}
 
 %description graph
 
@@ -320,9 +324,9 @@ stream buffers and i/o filters.
 %package locale
 Summary: Run-Time component of boost locale library
 Group: System Environment/Libraries
-Requires: boost-chrono = %{version}-%{release}
-Requires: boost-system = %{version}-%{release}
-Requires: boost-thread = %{version}-%{release}
+Requires: ripple-boost-chrono = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
+Requires: ripple-boost-thread = %{version}-%{release}
 
 %description locale
 
@@ -377,8 +381,8 @@ support for Boost Python Library compiled for Python 3.
 %package python3-devel
 Summary: Shared object symbolic links for Boost.Python 3
 Group: System Environment/Libraries
-Requires: boost-python3 = %{version}-%{release}
-Requires: boost-devel = %{version}-%{release}
+Requires: ripple-boost-python3 = %{version}-%{release}
+Requires: ripple-boost-devel = %{version}-%{release}
 
 %description python3-devel
 
@@ -440,7 +444,7 @@ program execution monitoring.
 %package thread
 Summary: Run-Time component of boost thread library
 Group: System Environment/Libraries
-Requires: boost-system = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
 
 %description thread
 
@@ -452,8 +456,8 @@ data specific to individual threads.
 %package timer
 Summary: Run-Time component of boost timer library
 Group: System Environment/Libraries
-Requires: boost-chrono = %{version}-%{release}
-Requires: boost-system = %{version}-%{release}
+Requires: ripple-boost-chrono = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
 
 %description timer
 
@@ -464,11 +468,11 @@ with as little as one #include and one additional line of code.
 %package wave
 Summary: Run-Time component of boost C99/C++ pre-processing library
 Group: System Environment/Libraries
-Requires: boost-chrono = %{version}-%{release}
-Requires: boost-date-time = %{version}-%{release}
-Requires: boost-filesystem = %{version}-%{release}
-Requires: boost-system = %{version}-%{release}
-Requires: boost-thread = %{version}-%{release}
+Requires: ripple-boost-chrono = %{version}-%{release}
+Requires: ripple-boost-date-time = %{version}-%{release}
+Requires: ripple-boost-filesystem = %{version}-%{release}
+Requires: ripple-boost-system = %{version}-%{release}
+Requires: ripple-boost-thread = %{version}-%{release}
 
 %description wave
 
@@ -480,7 +484,7 @@ pre-processor functionality.
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
 Requires: boost = %{version}-%{release}
-Provides: boost-python-devel = %{version}-%{release}
+Provides: ripple-boost-python-devel = %{version}-%{release}
 
 %description devel
 Headers and shared object symbolic links for the Boost C++ libraries.
@@ -488,9 +492,9 @@ Headers and shared object symbolic links for the Boost C++ libraries.
 %package static
 Summary: The Boost C++ static development libraries
 Group: Development/Libraries
-Requires: boost-devel = %{version}-%{release}
-Obsoletes: boost-devel-static < 1.34.1-14
-Provides: boost-devel-static = %{version}-%{release}
+Requires: ripple-boost-devel = %{version}-%{release}
+Obsoletes: ripple-boost-devel-static < 1.34.1-14
+Provides: ripple-boost-devel-static = %{version}-%{release}
 
 %description static
 Static Boost C++ libraries.
@@ -501,7 +505,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Provides: boost-python-docs = %{version}-%{release}
+Provides: ripple-boost-python-docs = %{version}-%{release}
 
 %description doc
 This package contains the documentation in the HTML format of the Boost C++
@@ -514,7 +518,7 @@ Group: Documentation
 %if 0%{?fedora} >= 10 || 0%{?rhel} >= 6
 BuildArch: noarch
 %endif
-Requires: boost-devel = %{version}-%{release}
+Requires: ripple-boost-devel = %{version}-%{release}
 
 %description examples
 This package contains example source files distributed with boost.
@@ -527,7 +531,7 @@ Summary: Run-Time component of Boost.MPI library
 Group: System Environment/Libraries
 Requires: openmpi
 BuildRequires: openmpi-devel
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description openmpi
 
@@ -537,10 +541,10 @@ API over the OpenMPI implementation of MPI.
 %package openmpi-devel
 Summary: Shared library symbolic links for Boost.MPI
 Group: System Environment/Libraries
-Requires: boost-devel = %{version}-%{release}
-Requires: boost-openmpi = %{version}-%{release}
-Requires: boost-openmpi-python = %{version}-%{release}
-Requires: boost-graph-openmpi = %{version}-%{release}
+Requires: ripple-boost-devel = %{version}-%{release}
+Requires: ripple-boost-openmpi = %{version}-%{release}
+Requires: ripple-boost-openmpi-python = %{version}-%{release}
+Requires: ripple-boost-graph-openmpi = %{version}-%{release}
 
 %description openmpi-devel
 
@@ -550,9 +554,9 @@ API over the OpenMPI implementation of MPI.
 %package openmpi-python
 Summary: Python run-time component of Boost.MPI library
 Group: System Environment/Libraries
-Requires: boost-openmpi = %{version}-%{release}
-Requires: boost-python = %{version}-%{release}
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-openmpi = %{version}-%{release}
+Requires: ripple-boost-python = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description openmpi-python
 
@@ -562,8 +566,8 @@ API over the OpenMPI implementation of MPI.
 %package graph-openmpi
 Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
-Requires: boost-openmpi = %{version}-%{release}
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-openmpi = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description graph-openmpi
 
@@ -582,7 +586,7 @@ Summary: Run-Time component of Boost.MPI library
 Group: System Environment/Libraries
 Requires: mpich
 BuildRequires: mpich-devel
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description mpich
 
@@ -592,10 +596,10 @@ API over the MPICH implementation of MPI.
 %package mpich-devel
 Summary: Shared library symbolic links for Boost.MPI
 Group: System Environment/Libraries
-Requires: boost-devel = %{version}-%{release}
-Requires: boost-mpich = %{version}-%{release}
-Requires: boost-mpich-python = %{version}-%{release}
-Requires: boost-graph-mpich = %{version}-%{release}
+Requires: ripple-boost-devel = %{version}-%{release}
+Requires: ripple-boost-mpich = %{version}-%{release}
+Requires: ripple-boost-mpich-python = %{version}-%{release}
+Requires: ripple-boost-graph-mpich = %{version}-%{release}
 
 %description mpich-devel
 
@@ -605,9 +609,9 @@ API over the MPICH implementation of MPI.
 %package mpich-python
 Summary: Python run-time component of Boost.MPI library
 Group: System Environment/Libraries
-Requires: boost-mpich = %{version}-%{release}
-Requires: boost-python = %{version}-%{release}
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-mpich = %{version}-%{release}
+Requires: ripple-boost-python = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description mpich-python
 
@@ -617,8 +621,8 @@ API over the MPICH implementation of MPI.
 %package graph-mpich
 Summary: Run-Time component of parallel boost graph library
 Group: System Environment/Libraries
-Requires: boost-mpich = %{version}-%{release}
-Requires: boost-serialization = %{version}-%{release}
+Requires: ripple-boost-mpich = %{version}-%{release}
+Requires: ripple-boost-serialization = %{version}-%{release}
 
 %description graph-mpich
 
@@ -1133,7 +1137,7 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_includedir}/%{name}
+%{_includedir}/boost
 %{_libdir}/libboost_atomic*.so
 %{_libdir}/libboost_chrono*.so
 %if %{with context}
