@@ -32,8 +32,8 @@
 
 Name: boost
 Summary: The free peer-reviewed portable C++ source libraries
-Version: 1.53.0
-%define version_enc 1_53_0
+Version: 1.57.0
+%define version_enc 1_57_0
 Release: 23%{?dist}
 License: Boost and MIT and Python
 
@@ -255,6 +255,27 @@ Group: System Environment/Libraries
 Run-Time support for Boost.Context, a foundational library that
 provides a sort of cooperative multitasking on a single thread.
 %endif
+
+%package coroutine
+Summary: Run-Time component of boost coroutine library
+Group: System Environment/Libraries
+
+%description coroutine
+Run-Time support for Boost.Coroutine, a library for coroutines
+
+%package log
+Summary: Run-Time component of boost log library
+Group: System Environment/Libraries
+
+%description log
+Run-Time support for Boost.Log, a library for logging
+
+%package container
+Summary: Run-Time component of boost container library
+Group: System Environment/Libraries
+
+%description container
+Run-Time support for Boost.Container, a library for containers
 
 %package date-time
 Summary: Run-Time component of boost date-time library
@@ -638,46 +659,6 @@ a number of significant features and is now developed independently
 %patch4 -p1
 %patch5 -p1
 %patch7 -p2
-%patch9 -p1
-%patch10 -p1
-%patch15 -p0
-%patch16 -p1
-%patch17 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p0
-%patch26 -p1
-%patch27 -p1
-%patch28 -p0
-%patch29 -p1
-%patch30 -p1
-%patch31 -p0
-%patch32 -p0
-%patch33 -p0
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
-%patch45 -p1
-%patch46 -p1
-%patch47 -p1
-%patch48 -p1
-%patch49 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p2
 
 # At least python2_version needs to be a macro so that it's visible in
 # %%install as well.
@@ -765,10 +746,6 @@ echo ============================= build $MPI_COMPILER ==================
 export PATH=/bin${PATH:+:}$PATH
 %endif
 
-echo ============================= build Boost.Build ==================
-(cd tools/build/v2
- ./bootstrap.sh --with-toolset=gcc)
-
 %check
 :
 
@@ -842,22 +819,6 @@ ln -s libboost_atomic-mt.so $RPM_BUILD_ROOT%{_libdir}/libboost_atomic.so
 find $RPM_BUILD_ROOT%{_libdir} -maxdepth 1 -name libboost_\*-mt.so \
 	| while read a; do test -e ${a/-mt/} || exit 1; done
 
-echo ============================= install Boost.Build ==================
-(cd tools/build/v2
- ./b2 --prefix=$RPM_BUILD_ROOT%{_prefix} install
- # Fix some permissions
- chmod -x $RPM_BUILD_ROOT%{_datadir}/boost-build/build/alias.py
- chmod +x $RPM_BUILD_ROOT%{_datadir}/boost-build/tools/doxproc.py
- # We don't want to distribute this
- rm -f $RPM_BUILD_ROOT%{_bindir}/b2
- # Not a real file
- rm -f $RPM_BUILD_ROOT%{_datadir}/boost-build/build/project.ann.py
- # Empty file
- rm -f $RPM_BUILD_ROOT%{_datadir}/boost-build/tools/doxygen/windows-paths-check.hpp
- # Install the manual page
- %{__install} -p -m 644 doc/bjam.1 -D $RPM_BUILD_ROOT%{_mandir}/man1/bjam.1
-)
-
 # Install documentation files (HTML pages) within the temporary place
 echo ============================= install documentation ==================
 # Prepare the place to temporary store the generated documentation
@@ -882,7 +843,6 @@ rm -f tmp-doc-directories
 echo ============================= install examples ==================
 # Fix a few non-standard issues (DOS and/or non-UTF8 files)
 sed -i -e 's/\r//g' libs/geometry/example/ml02_distance_strategy.cpp
-sed -i -e 's/\r//g' libs/geometry/example/ml02_distance_strategy.vcproj
 for tmp_doc_file in flyweight/example/Jamfile.v2 \
  format/example/sample_new_features.cpp multi_index/example/Jamfile.v2 \
  multi_index/example/hashed.cpp serialization/example/demo_output.txt \
@@ -942,6 +902,18 @@ rm -rf $RPM_BUILD_ROOT
 
 %postun context -p /sbin/ldconfig
 %endif
+
+%post coroutine -p /sbin/ldconfig
+
+%postun coroutine -p /sbin/ldconfig
+
+%post container -p /sbin/ldconfig
+
+%postun container -p /sbin/ldconfig
+
+%post log -p /sbin/ldconfig
+
+%postun log -p /sbin/ldconfig
 
 %post date-time -p /sbin/ldconfig
 
@@ -1026,6 +998,21 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
 %{_libdir}/libboost_chrono*.so.%{sonamever}
+
+%files coroutine
+%defattr(-, root, root, -)
+%{_libdir}/libboost_coroutine*.so.%{sonamever}
+%{_libdir}/libboost_coroutine*.so
+
+%files log
+%defattr(-, root, root, -)
+%{_libdir}/libboost_log*.so
+%{_libdir}/libboost_log*.so.%{sonamever}
+
+%files container
+%defattr(-, root, root, -)
+%{_libdir}/libboost_container*.so
+%{_libdir}/libboost_container*.so.%{sonamever}
 
 %if %{with context}
 %files context
@@ -1240,13 +1227,10 @@ rm -rf $RPM_BUILD_ROOT
 %files build
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_datadir}/boost-build/
 
 %files jam
 %defattr(-, root, root, -)
 %doc LICENSE_1_0.txt
-%{_bindir}/bjam
-%{_mandir}/man1/bjam.1*
 
 %changelog
 * Mon Sep 22 2014 Petr Machata <pmachata@redhat.com> - 1.53.0-23
