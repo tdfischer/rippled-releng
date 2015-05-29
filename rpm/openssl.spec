@@ -24,7 +24,7 @@
 %global _performance_build 1
 
 Summary: Utilities from the general purpose cryptography library with TLS implementation
-Name: rippled-openssl
+Name: ripple-openssl
 Version: 1.0.1e
 Release: 42%{?dist}.5
 Epoch: 1
