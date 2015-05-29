@@ -483,7 +483,7 @@ pre-processor functionality.
 %package devel
 Summary: The Boost C++ headers and shared development libraries
 Group: Development/Libraries
-Requires: boost = %{version}-%{release}
+Requires: ripple-boost = %{version}-%{release}
 Provides: ripple-boost-python-devel = %{version}-%{release}
 
 %description devel
@@ -636,7 +636,7 @@ back-end to do the parallel work.
 %package build
 Summary: Cross platform build system for C++ projects
 Group: Development/Tools
-Requires: boost-jam
+Requires: ripple-boost-jam
 BuildArch: noarch
 
 %description build
