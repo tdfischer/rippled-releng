@@ -9,6 +9,7 @@ Source0:        %{name}-%{version}.tar.xz
 Patch0:		build-against-ripple-libs.patch
 
 BuildRequires:  scons ripple-boost-devel protobuf-devel ripple-openssl-devel
+Requires:       ripple-openssl-libs
 
 %description
 rippled
