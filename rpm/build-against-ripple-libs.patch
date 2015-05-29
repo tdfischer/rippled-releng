@@ -1,0 +1,33 @@
+diff --git a/SConstruct b/SConstruct
+index d3df146..ed6d39c 100644
+--- a/SConstruct
++++ b/SConstruct
+@@ -261,16 +261,18 @@ def config_base(env):
+     try:
+         BOOST_ROOT = os.path.normpath(os.environ['BOOST_ROOT'])
+         env.Append(CPPPATH=[
+-            BOOST_ROOT,
++            os.path.join(BOOST_ROOT, 'include'),
+             ])
+         env.Append(LIBPATH=[
+             os.path.join(BOOST_ROOT, 'stage', 'lib'),
++            os.path.join(BOOST_ROOT, 'lib')
+             ])
+         env['BOOST_ROOT'] = BOOST_ROOT
++        env.Prepend(LINKFLAGS=['-Wl,-rpath=%s'%os.path.join(BOOST_ROOT, 'lib')])
+     except KeyError:
+         pass
+ 
+-    if Beast.system.windows:
++    if not Beast.system.osx:
+         try:
+             OPENSSL_ROOT = os.path.normpath(os.environ['OPENSSL_ROOT'])
+             env.Append(CPPPATH=[
+@@ -279,6 +281,7 @@ def config_base(env):
+             env.Append(LIBPATH=[
+                 os.path.join(OPENSSL_ROOT, 'lib', 'VC', 'static'),
+                 ])
++            env.Prepend(LINKFLAGS=['-Wl,-rpath=%s'%os.path.join(OPENSSL_ROOT, 'lib')])
+         except KeyError:
+             pass
+     elif Beast.system.osx:
